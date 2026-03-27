@@ -4,6 +4,6 @@
   "path": "xdm-app-host.exe",
   "type": "stdio",
   "allowed_extensions": [
-    "xdm-integration-module@subhra74.github.io"
+    "xdm-integration-module@juanmmorel.github.io"
   ]
 }

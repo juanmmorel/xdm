@@ -63,7 +63,7 @@ pkgver=${VERSION}
 pkgrel=1
 pkgdesc="Open source download accelerator and video downloader."
 arch=("x86_64")
-url="https://github.com/subhra74/xdm"
+url="https://github.com/juanmmorel/xdm"
 license=('GPLv3')
 #source=("${SOURCE_NAME}.tar.gz")
 depends=('ffmpeg' 'gtk3>=3.22.0')

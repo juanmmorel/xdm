@@ -4,8 +4,8 @@
 </p>
 
 <p align="center">
-	<a href="https://github.com/subhra74/xdm/workflows/Java%20CI/badge.svg?branch=master"><img src="https://github.com/subhra74/xdm/workflows/Java%20CI/badge.svg?branch=master" alt="Java CI" /></a>
-	<a href="https://camo.githubusercontent.com/278e057571a0481121b2d60490ff656fb8736a20/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f646f776e6c6f6164732f73756268726137342f78646d2f746f74616c2e737667"><img src="https://img.shields.io/github/downloads/subhra74/xdm/total.svg" alt="Github All Releases" /></a>
+	<a href="https://github.com/juanmmorel/xdm/workflows/Java%20CI/badge.svg?branch=master"><img src="https://github.com/juanmmorel/xdm/workflows/Java%20CI/badge.svg?branch=master" alt="Java CI" /></a>
+	<a href="https://camo.githubusercontent.com/278e057571a0481121b2d60490ff656fb8736a20/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f646f776e6c6f6164732f73756268726137342f78646d2f746f74616c2e737667"><img src="https://img.shields.io/github/downloads/juanmmorel/xdm/total.svg" alt="Github All Releases" /></a>
 </p>
 
 ### [XDM Homepage](https://xtremedownloadmanager.com/ "XDM Homepage") ###

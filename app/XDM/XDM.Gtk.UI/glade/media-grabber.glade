@@ -39,7 +39,7 @@
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <property name="relief">none</property>
-                <property name="uri">https://subhra74.github.io/xdm/redirect.html?target=mg</property>
+                <property name="uri">https://juanmmorel.github.io/xdm/redirect.html?target=mg</property>
               </object>
               <packing>
                 <property name="expand">False</property>

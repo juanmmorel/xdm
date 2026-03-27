@@ -71,7 +71,7 @@
 //        {
 //            Log.Debug("msix: " + msix);
 //            Log.Debug("Manifest path: " + manifestPath);
-//            var extensions = new HashSet<string> { browser == Browser.Firefox ? "xdm-integration-module@subhra74.github.io" : "chrome-extension://akdmdglbephckgfmdffcdebnpjgamofc/" };
+//            var extensions = new HashSet<string> { browser == Browser.Firefox ? "xdm-integration-module@juanmmorel.github.io" : "chrome-extension://akdmdglbephckgfmdffcdebnpjgamofc/" };
 //            if (browser == Browser.Chrome)
 //            {
 //                Log.Debug("Configuring for chrome");

@@ -31,7 +31,7 @@
 
 //        private static void CreateMessagingHostManifest(Browser browser, string appName, string manifestPath)
 //        {
-//            var extensions = new List<string> { browser == Browser.Firefox ? "xdm-integration-module@subhra74.github.io" : "chrome-extension://akdmdglbephckgfmdffcdebnpjgamofc/" };
+//            var extensions = new List<string> { browser == Browser.Firefox ? "xdm-integration-module@juanmmorel.github.io" : "chrome-extension://akdmdglbephckgfmdffcdebnpjgamofc/" };
 //            try
 //            {
 //                var file = Path.Combine(Config.AppDir, "extension.txt");

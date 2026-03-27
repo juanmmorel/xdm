@@ -11,7 +11,7 @@
   IgnorableNamespaces="uap rescap iot uap3 desktop">
 
   <Identity
-    Name="56617subhra74.XtremeDownloadManager-XDM"
+    Name="56617juanmmorel.XtremeDownloadManager-XDM"
     Publisher="CN=CE459F77-0688-4F4F-B36F-5657C1A1A02C"
     Version="8.0.98.0" />
 
