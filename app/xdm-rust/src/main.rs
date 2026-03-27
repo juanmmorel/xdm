@@ -1,20 +1,29 @@
+mod downloader;
+mod parser;
+
 use warp::Filter;
 use serde::{Serialize, Deserialize};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::Mutex;
-use std::fs::File;
-use std::io::copy;
+use crate::downloader::Downloader;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 struct Config {
     enabled: bool,
+    #[serde(rename = "fileExts")]
     file_exts: Vec<String>,
+    #[serde(rename = "blockedHosts")]
     blocked_hosts: Vec<String>,
+    #[serde(rename = "requestFileExts")]
     request_file_exts: Vec<String>,
+    #[serde(rename = "mediaTypes")]
     media_types: Vec<String>,
+    #[serde(rename = "tabsWatcher")]
     tabs_watcher: Vec<String>,
+    #[serde(rename = "videoList")]
     video_list: Vec<VideoInfo>,
+    #[serde(rename = "matchingHosts")]
     matching_hosts: Vec<String>,
 }
 
@@ -23,6 +32,7 @@ struct VideoInfo {
     id: String,
     text: String,
     info: String,
+    #[serde(rename = "tabId")]
     tab_id: String,
 }
 
@@ -31,10 +41,15 @@ struct DownloadMessage {
     url: String,
     filename: Option<String>,
     cookie: Option<String>,
+    #[serde(rename = "requestHeaders")]
     request_headers: Option<HashMap<String, Vec<String>>>,
+    #[serde(rename = "responseHeaders")]
     response_headers: Option<HashMap<String, Vec<String>>>,
+    #[serde(rename = "fileSize")]
     file_size: Option<u64>,
+    #[serde(rename = "mimeType")]
     mime_type: Option<String>,
+    segments: Option<usize>,
 }
 
 type AppState = Arc<Mutex<Config>>;
@@ -53,6 +68,8 @@ async fn main() {
     }));
 
     let state_filter = warp::any().map(move || state.clone());
+    let downloader = Arc::new(Downloader::new());
+    let downloader_filter = warp::any().map(move || downloader.clone());
 
     let sync_route = warp::path("sync")
         .and(warp::get())
@@ -62,6 +79,7 @@ async fn main() {
     let download_route = warp::path("download")
         .and(warp::post())
         .and(warp::body::json())
+        .and(downloader_filter)
         .and_then(handle_download);
 
     let routes = sync_route.or(download_route);
@@ -77,26 +95,19 @@ async fn handle_sync(state: AppState) -> Result<impl warp::Reply, warp::Rejectio
     Ok(warp::reply::json(&*config))
 }
 
-async fn handle_download(msg: DownloadMessage) -> Result<impl warp::Reply, warp::Rejection> {
+async fn handle_download(msg: DownloadMessage, downloader: Arc<Downloader>) -> Result<impl warp::Reply, warp::Rejection> {
     println!("Received download request: {:?}", msg);
 
     let url = msg.url.clone();
     let filename = msg.filename.clone().unwrap_or_else(|| "downloaded_file".to_string());
+    let segments = msg.segments.unwrap_or(32);
 
     tokio::spawn(async move {
-        match download_file(&url, &filename).await {
+        match downloader.download(&url, &filename, segments).await {
             Ok(_) => println!("Download complete: {}", filename),
             Err(e) => eprintln!("Download failed: {}", e),
         }
     });
 
     Ok(warp::reply::with_status("Download queued", warp::http::StatusCode::ACCEPTED))
-}
-
-async fn download_file(url: &str, filename: &str) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    let response = reqwest::get(url).await?;
-    let mut dest = File::create(filename)?;
-    let content = response.bytes().await?;
-    copy(&mut content.as_ref(), &mut dest)?;
-    Ok(())
 }
