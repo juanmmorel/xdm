@@ -15,7 +15,7 @@ dotnet build -c Release -f net4.6.0 ..\XDM.Wpf.UI\XDM.Wpf.UI.csproj -o BIN
 dotnet build -c Release -f net4.6.0 ..\XDM.App.Host\XDM.App.Host.csproj -o BIN\XDM.App.Host
 
 copy /B ffmpeg-x86.exe BIN
-git clone https://github.com/subhra74/xdm-helper-chrome.git
+git clone https://github.com/juanmmorel/xdm-helper-chrome.git
 
 xcopy /E xdm-helper-chrome\chrome\chrome-extension BIN\chrome-extension
 xcopy /E xdm-helper-chrome\ext-loader BIN\ext-loader

@@ -645,12 +645,12 @@ namespace XDM.Core
 
             peer.SupportPageClicked += (s, e) =>
             {
-                Helpers.OpenBrowser("https://subhra74.github.io/xdm/redirect-support.html");
+                Helpers.OpenBrowser("https://juanmmorel.github.io/xdm/redirect-support.html");
             };
 
             peer.BugReportClicked += (s, e) =>
             {
-                Helpers.OpenBrowser("https://subhra74.github.io/xdm/redirect-issue.html");
+                Helpers.OpenBrowser("https://juanmmorel.github.io/xdm/redirect-issue.html");
             };
 
             peer.CheckForUpdateClicked += (s, e) =>

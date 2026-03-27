@@ -328,9 +328,9 @@ namespace XDM.SystemTests
         //}
 
         //[Ignore("Execute for special case")]
-        //[TestCase("https://github.com/subhra74/xdm/releases/download/7.2.11/xdman.jar")]
+        //[TestCase("https://github.com/juanmmorel/xdm/releases/download/7.2.11/xdman.jar")]
         //[TestCase("https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2")]
-        //[TestCase("https://github.com/subhra74/snowflake/releases/download/v1.0.4/snowflake-1.0.4-setup-amd64.bin")]
+        //[TestCase("https://github.com/juanmmorel/snowflake/releases/download/v1.0.4/snowflake-1.0.4-setup-amd64.bin")]
 
         ////[TestCase("http://mirrors.evowise.com/linuxmint/stable/20/linuxmint-20-cinnamon-64bit.iso")]
         //public void DownloadAsyncRealUrlSuccess(string url)
@@ -351,7 +351,7 @@ namespace XDM.SystemTests
         //    Assert.NotZero(hc.FileSize);
         //}
 
-        //[TestCase("https://github.com/subhra74/xdm/releases/download/7.2.11/xdman.jar")]
+        //[TestCase("https://github.com/juanmmorel/xdm/releases/download/7.2.11/xdman.jar")]
         //public async Task DownloadSegmented(string url)
         //{
         //    string configDir = Path.GetTempPath();
