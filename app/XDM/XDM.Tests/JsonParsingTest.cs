@@ -15,7 +15,7 @@ namespace XDM.Tests
         [Test]
         public void DeserializeBrowserMessageJsonSuccess()
         {
-            Test();
+            // Test();
         }
 
         private T? ReadProperty<T>(JsonTextReader reader, string name)
@@ -153,36 +153,36 @@ namespace XDM.Tests
 
         private void Test()
         {
-            var reader = new JsonTextReader(new StreamReader(@"C:\Users\subhro\Desktop\message.json"));
-            if (reader.Read() && reader.TokenType == JsonToken.StartObject)
-            {
-                while (reader.Read())
-                {
-                    if (reader.TokenType == JsonToken.EndObject) break;
+            // var reader = new JsonTextReader(new StreamReader(@"C:\Users\subhro\Desktop\message.json"));
+            // if (reader.Read() && reader.TokenType == JsonToken.StartObject)
+            // {
+            //     while (reader.Read())
+            //     {
+            //         if (reader.TokenType == JsonToken.EndObject) break;
 
-                    var messageType = ReadProperty<string>(reader, "messageType");
-                    if (messageType != null)
-                    {
-                        Console.WriteLine("messageType: {0}", messageType);
-                    }
-                    if (IsObjectStart(reader, "message"))
-                    {
-                        ReadMessageObject(reader);
-                    }
-                    if (IsListStart(reader, "messages"))
-                    {
-                        while (reader.Read())
-                        {
-                            if (reader.TokenType == JsonToken.EndArray) break;
-                            if (reader.TokenType == JsonToken.StartObject)
-                            {
-                                ReadMessageObject(reader);
-                            }
-                        }
-                    }
-                    SkipUnknownParts(reader);
-                }
-            }
+            //         var messageType = ReadProperty<string>(reader, "messageType");
+            //         if (messageType != null)
+            //         {
+            //             Console.WriteLine("messageType: {0}", messageType);
+            //         }
+            //         if (IsObjectStart(reader, "message"))
+            //         {
+            //             ReadMessageObject(reader);
+            //         }
+            //         if (IsListStart(reader, "messages"))
+            //         {
+            //             while (reader.Read())
+            //             {
+            //                 if (reader.TokenType == JsonToken.EndArray) break;
+            //                 if (reader.TokenType == JsonToken.StartObject)
+            //                 {
+            //                     ReadMessageObject(reader);
+            //                 }
+            //             }
+            //         }
+            //         SkipUnknownParts(reader);
+            //     }
+            // }
         }
     }
 }

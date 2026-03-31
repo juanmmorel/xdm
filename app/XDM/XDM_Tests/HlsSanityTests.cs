@@ -3,13 +3,13 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using XDM.Core.Lib.Common;
+using XDM.Core;
 using System.Threading;
-using MediaParser.Hls;
+using XDM.Core.MediaParser.Hls;
 using Serilog;
-using XDM.Core.Lib.Common.MediaProcessor;
+using XDM.Core.MediaProcessor;
 using System.Net;
-using XDM.Core.Lib.Downloader.Adaptive.Hls;
+using XDM.Core.Downloader.Adaptive.Hls;
 
 namespace XDM.SystemTests
 {
@@ -53,7 +53,7 @@ namespace XDM.SystemTests
         #EXTINF:31.664967,
         hls8.ts
         #EXT-X-ENDLIST
-        
+
 ")]
         public void ParseMediaSegmentsSuccess(string data)
         {
@@ -63,32 +63,6 @@ namespace XDM.SystemTests
             Assert.IsTrue(pl.TotalDuration > 0);
             Assert.IsTrue(pl.MediaSegments.Count > 0);
         }
-
-        //        //[Ignore("Execute for special case")]
-        //        [TestCase("http://localhost:8080/hls.m3u8")]
-        //        public void DownloadAsyncRealUrlSuccess(string url)
-        //        {
-        //            string configDir = Path.GetTempPath();
-        //            string id = Guid.NewGuid().ToString();
-
-        //            string tempDir = @"C:\Users\subhro\Documents\IISExpress\DemoTS";//Path.Combine(Path.GetTempPath(), id);
-        //            Directory.CreateDirectory(tempDir);
-
-        //            Console.WriteLine(tempDir);
-
-        //            var hc = new HlsDownloader(new HlsDownloadInfo
-        //            {
-        //                PlaylistContainer = new MediaParser.Hls.HlsPlaylistContainer
-        //                {
-        //                    Url1 = new Uri(url),
-        //                }
-        //            });
-        //            hc.SetTargetDirectory(tempDir);
-        //            hc.DownloadAsync().Wait();
-
-        //            Console.WriteLine(hc.Duration);
-        //            Assert.NotZero(hc.Duration);
-        //        }
 
         [TestCase(".ts", ".ts")]
         [TestCase(".fmp4", ".mp4")]
@@ -127,7 +101,6 @@ namespace XDM.SystemTests
 
             var url = $"{mockServer.BaseUrl}{pid}";
 
-            string configDir = Path.GetTempPath();
             string id = Guid.NewGuid().ToString();
 
             string tempDir = Path.Combine(Path.GetTempPath(), id);
@@ -156,8 +129,8 @@ namespace XDM.SystemTests
                 success = false;
                 cs.Cancel();
             };
-            hc.TargetDir = tempDir;
-            hc.TargetFileName = "Sample";
+            hc.SetTargetDirectory(tempDir);
+            hc.SetFileName("Sample", hc.FileNameFetchMode);
             hc.Start();
             try
             {
@@ -221,7 +194,6 @@ namespace XDM.SystemTests
             var pl = CreateMockPlaylist(n, mockServer);
             mockServer.StartAsync();
 
-            string configDir = Path.GetTempPath();
             string id = Guid.NewGuid().ToString();
 
             string tempDir = Path.Combine(Path.GetTempPath(), id);
@@ -245,8 +217,8 @@ namespace XDM.SystemTests
                 success = false;
                 cs.Cancel();
             };
-            hc.TargetDir = tempDir;
-            hc.TargetFileName = "Sample";
+            hc.SetTargetDirectory(tempDir);
+            hc.SetFileName("Sample", hc.FileNameFetchMode);
             hc.Start();
 
             await Task.Delay(2000);
@@ -258,8 +230,8 @@ namespace XDM.SystemTests
             cs = new CancellationTokenSource();
             hc = new MultiSourceHLSDownloader(hc.Id,
             mediaProcessor: new FakeMediaProcessor());
-            hc.TargetDir = tempDir;
-            hc.TargetFileName = name;
+            hc.SetTargetDirectory(tempDir);
+            hc.SetFileName(name, hc.FileNameFetchMode);
             hc.Finished += (a, b) =>
             {
                 success = true;
@@ -289,39 +261,6 @@ namespace XDM.SystemTests
             Assert.AreEqual(size2, pl.Size);
         }
 
-        //        [TestCase(
-        //"#EXTM3U\n" +
-        //"#EXT-X-VERSION:6\n" +
-        //"#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"group_audio128\",NAME=\"audio_0\",DEFAULT=YES,URI=\"stream_0.m3u8\"\n" +
-        //"#EXT-X-STREAM-INF:BANDWIDTH=140800,CODECS=\"mp4a.40.2\",AUDIO=\"group_audio128\"\n" +
-        //"stream_0.m3u8\n" +
-
-        //"#EXT-X-STREAM-INF:BANDWIDTH=2340800,RESOLUTION=960x540,CODECS=\"avc1.64001f,mp4a.40.2\",AUDIO=\"group_audio128\"\n" +
-        //"stream_1.m3u8\n" +
-
-        //"#EXT-X-STREAM-INF:BANDWIDTH=6740800,RESOLUTION=1920x1080,CODECS=\"avc1.640028,mp4a.40.2\",AUDIO=\"group_audio128\"\n" +
-        //"stream_2.m3u8\n"), TestCase(@"
-        //#EXTM3U
-        //#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=464000,RESOLUTION=640x360,CODECS=""avc1.77.30, mp4a.40.2"",CLOSED-CAPTIONS=NONE
-        //https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/index_0_av.m3u8
-        //#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=764000,RESOLUTION=640x360,CODECS=""avc1.77.30, mp4a.40.2"",CLOSED-CAPTIONS=NONE
-        //https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/index_1_av.m3u8
-        //#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=1062000,RESOLUTION=640x360,CODECS=""avc1.77.30, mp4a.40.2"",CLOSED-CAPTIONS=NONE
-        //https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/index_2_av.m3u8
-        //#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=1563000,RESOLUTION=960x540,CODECS=""avc1.77.30, mp4a.40.2"",CLOSED-CAPTIONS=NONE
-        //https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/index_3_av.m3u8
-        //#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=64000,CODECS=""mp4a.40.2"",CLOSED-CAPTIONS=NONE
-        //https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/index_0_a.m3u8
-
-        //")]
-        //        public void ParseMasterPlaylistSuccess(string data)
-        //        {
-        //            var pl = HlsParser.ParseMasterPlaylist(data.Split('\n'),
-        //                    "http://example/hls/playlist.m3u8");
-        //            Assert.NotNull(pl);
-        //            Assert.IsTrue(pl.Count > 0);
-        //        }
-
         [TestCase(".ts", ".ts")]
         [TestCase(".fmp4", ".mp4")]
         [TestCase(".m4s", ".mp4")]
@@ -338,7 +277,6 @@ namespace XDM.SystemTests
 
             mockServer.StartAsync();
 
-            string configDir = Path.GetTempPath();
             string id = Guid.NewGuid().ToString();
 
             string tempDir = Path.Combine(Path.GetTempPath(), id);
@@ -363,8 +301,8 @@ namespace XDM.SystemTests
                 success = false;
                 cs.Cancel();
             };
-            hc.TargetDir = tempDir;
-            hc.TargetFileName = "Sample";
+            hc.SetTargetDirectory(tempDir);
+            hc.SetFileName("Sample", hc.FileNameFetchMode);
             hc.Start();
             try
             {
@@ -399,7 +337,6 @@ namespace XDM.SystemTests
 
             mockServer.StartAsync();
 
-            string configDir = Path.GetTempPath();
             string id = Guid.NewGuid().ToString();
 
             string tempDir = Path.Combine(Path.GetTempPath(), id);
@@ -423,8 +360,8 @@ namespace XDM.SystemTests
                 success = false;
                 cs.Cancel();
             };
-            hc.TargetDir = tempDir;
-            hc.TargetFileName = "Sample";
+            hc.SetTargetDirectory(tempDir);
+            hc.SetFileName("Sample", hc.FileNameFetchMode);
             hc.Start();
 
             await Task.Delay(10000);
@@ -436,8 +373,8 @@ namespace XDM.SystemTests
             cs = new CancellationTokenSource();
             hc = new MultiSourceHLSDownloader(hc.Id,
             mediaProcessor: new FakeMediaProcessor());
-            hc.TargetDir = tempDir;
-            hc.TargetFileName = name;
+            hc.SetTargetDirectory(tempDir);
+            hc.SetFileName(name, hc.FileNameFetchMode);
             hc.Finished += (a, b) =>
             {
                 Log.Debug("Finished2");
@@ -460,10 +397,6 @@ namespace XDM.SystemTests
             Assert.IsTrue(success);
 
             long size2 = hc.FileSize;
-            //foreach (var f in Directory.EnumerateFiles(Path.Combine(Config.DataDir, hc.Id)))
-            //{
-            //    size2 += new FileInfo(f).Length;
-            //}
             Log.Debug(size2 + " " + (pl1.Size + pl2.Size));
             Assert.AreEqual(pl1.Size + pl2.Size, size2);
 
@@ -472,100 +405,6 @@ namespace XDM.SystemTests
             Assert.IsTrue(expectedExt.Equals(Path.GetExtension(hc.TargetFileName),
                 StringComparison.InvariantCultureIgnoreCase));
         }
-
-        //        [TestCase(
-        //            @"
-        //        #EXTM3U
-        //        #EXT-X-VERSION:4
-        //        #EXT-X-TARGETDURATION:20
-        //        #EXT-X-MEDIA-SEQUENCE:0
-        //        #EXTINF:20.000000,
-        //        #EXT-X-BYTERANGE:1629960@0
-        //        out.ts
-        //        #EXTINF:20.000000,
-        //        #EXT-X-BYTERANGE:2849328@1629960
-        //        out.ts
-        //        #EXTINF:20.000000,
-        //        #EXT-X-BYTERANGE:1252644@4479288
-        //        out.ts
-        //        #EXTINF:19.800000,
-        //        #EXT-X-BYTERANGE:1100740@5731932
-        //        out.ts
-        //        #EXT-X-ENDLIST
-        //        "
-        //            )]
-        //        public void ParseMediaSegments_WithByteRange_Success(string data)
-        //        {
-        //            var pl = HlsParser.ParseMediaSegments(data.Split('\n'),
-        //                    "http://example/hls/playlist.m3u8");
-        //            Assert.NotNull(pl);
-        //            Assert.IsTrue(pl.MediaSegments.Count > 0);
-        //        }
-
-        //        [Test]
-        //        public void DownloadAsync_WithByteRange_Success()
-        //        {
-        //            var mockServer = new MockServer.MockServer();
-
-        //            var mockId = Guid.NewGuid().ToString();
-        //            var ret = mockServer.AddMockHandler(mockId, fixedSize: 6832672);
-
-        //            var contentUrl = $"http://127.0.0.1:39000/{mockId}";
-        //            var pl = $@"
-        //        #EXTM3U
-        //        #EXT-X-VERSION:4
-        //        #EXT-X-TARGETDURATION:20
-        //        #EXT-X-MEDIA-SEQUENCE:0
-        //        #EXTINF:20.000000,
-        //        #EXT-X-BYTERANGE:1629960@0
-        //        {contentUrl}
-        //        #EXTINF:20.000000,
-        //        #EXT-X-BYTERANGE:2849328@1629960
-        //        {contentUrl}
-        //        #EXTINF:20.000000,
-        //        #EXT-X-BYTERANGE:1252644@4479288
-        //        {contentUrl}
-        //        #EXTINF:19.800000,
-        //        #EXT-X-BYTERANGE:1100740@5731932
-        //        {contentUrl}
-        //        #EXT-X-ENDLIST";
-        //            var pid = Guid.NewGuid().ToString();
-        //            var url = $"http://127.0.0.1:39000/{pid}";
-
-        //            mockServer.AddMockHandler(pid, contents: Encoding.UTF8.GetBytes(pl));
-
-        //            mockServer.StartAsync();
-
-        //            string configDir = Path.GetTempPath();
-        //            string id = Guid.NewGuid().ToString();
-
-        //            string tempDir = @"C:\Users\subhro\Documents\IISExpress\DemoTS";//Path.Combine(Path.GetTempPath(), id);
-        //            Directory.CreateDirectory(tempDir);
-
-        //            Console.WriteLine(tempDir);
-
-        //            var hc = new HlsDownloader(new HlsDownloadInfo
-        //            {
-        //                PlaylistContainer = new MediaParser.Hls.HlsPlaylistContainer
-        //                {
-        //                    Url1 = new Uri(url)
-        //                }
-        //            });
-        //            hc.SetTargetDirectory(tempDir);
-        //            hc.DownloadAsync().Wait();
-
-        //            Console.WriteLine(hc.Duration);
-        //            Assert.NotZero(hc.Duration);
-
-        //            long size2 = 0;
-        //            foreach (var f in Directory.EnumerateFiles(Path.Combine(Config.DataDir, hc.Id)))
-        //            {
-        //                size2 += new FileInfo(f).Length;
-        //            }
-
-        //            Assert.AreEqual(ret.Size, size2);
-        //            Assert.AreEqual(ret.Hash, GetFileHash(Directory.GetFiles(Path.Combine(Config.DataDir, hc.Id))[0]));
-        //        }
     }
 
     class FakeMediaProcessor : BaseMediaProcessor
@@ -583,9 +422,12 @@ namespace XDM.SystemTests
             outFileSize = -1;
             return MediaProcessingResult.Success;
         }
+
+        public override MediaProcessingResult ConvertToMp3Audio(string segmentListFile, string outfile, CancelFlag cancellationToken, out long outFileSize)
+        {
+            Log.Information(segmentListFile + " " + outfile);
+            outFileSize = -1;
+            return MediaProcessingResult.Success;
+        }
     }
 }
-
-
-
-
