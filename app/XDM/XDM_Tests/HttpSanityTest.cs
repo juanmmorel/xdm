@@ -2,16 +2,16 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using XDM.Core.Lib.Common;
-//using XDM.Core.Lib.Downloader.YT.Dash;
+using XDM.Core;
+//using XDM.Core.Downloader.YT.Dash;
 using System.Threading;
 using System.Collections.Generic;
 
 using static XDM.SystemTests.TestUtil;
-using XDM.Core.Lib.Util;
+using XDM.Core.Util;
 using Serilog;
-using XDM.Core.Lib.Downloader.Progressive.SingleHttp;
-using XDM.Core.Lib.Downloader.Progressive.DualHttp;
+using XDM.Core.Downloader.Progressive.SingleHttp;
+using XDM.Core.Downloader.Progressive.DualHttp;
 
 namespace XDM.SystemTests
 {
@@ -926,15 +926,15 @@ namespace XDM.SystemTests
         [Test]
         public void ParseTimeSucess()
         {
-            Assert.AreEqual(Helpers.ParseTime(Helpers.RxDuration.Match(@"  Duration: 01:20:40.00, start: 11168.744000, bitrate: N/A")), 1 * 3600 + 20 * 60 + 40);
-            Assert.AreEqual(Helpers.ParseTime(Helpers.RxTime.Match(@"data :frame=   54 fps=0.0 q=-1.0 size=     825kB time=01:20:40.00 bitrate=3031.6kbits/s")), 1 * 3600 + 20 * 60 + 40);
-            Assert.AreEqual(Helpers.ParseTime(Helpers.RxTime.Match(@"    Stream #0:0: Video: h264 (High), yuv420p, 1280x720 [SAR 1:1 DAR 16:9], 30.30 fps, 30 tbr, 1k tbn, 60 tbc")), -1);
+            Assert.AreEqual(ParsingHelper.ParseTime(ParsingHelper.RxDuration.Match(@"  Duration: 01:20:40.00, start: 11168.744000, bitrate: N/A")), 1 * 3600 + 20 * 60 + 40);
+            Assert.AreEqual(ParsingHelper.ParseTime(ParsingHelper.RxTime.Match(@"data :frame=   54 fps=0.0 q=-1.0 size=     825kB time=01:20:40.00 bitrate=3031.6kbits/s")), 1 * 3600 + 20 * 60 + 40);
+            Assert.AreEqual(ParsingHelper.ParseTime(ParsingHelper.RxTime.Match(@"    Stream #0:0: Video: h264 (High), yuv420p, 1280x720 [SAR 1:1 DAR 16:9], 30.30 fps, 30 tbr, 1k tbn, 60 tbc")), -1);
         }
 
         [Test]
         public void FFmpegInPath()
         {
-            Assert.IsNotNull(Helpers.FindExecutableFromSystemPath("ffmpeg.exe"));
+            Assert.IsNotNull(PlatformHelper.FindExecutableFromSystemPath("ffmpeg.exe"));
         }
 
         //[Test]

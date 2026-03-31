@@ -1,4 +1,4 @@
-﻿using MediaParser.Dash;
+﻿using XDM.Core.MediaParser.Dash;
 using NUnit.Framework;
 using Serilog;
 using System;
@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using XDM.Core.Lib.Common;
+using XDM.Core;
 
 namespace XDM.SystemTests
 {

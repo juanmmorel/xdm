@@ -13,10 +13,10 @@ namespace MockServer
     {
 
         private Dictionary<string, string> fileMap = new Dictionary<string, string>();
-        private Dictionary<string, Dictionary<string, string>> headerMap = new Dictionary<string, Dictionary<string, string>>();
+        private Dictionary<string, Dictionary<string, string>?> headerMap = new Dictionary<string, Dictionary<string, string>?>();
         private Dictionary<string, string> fileHashMap = new Dictionary<string, string>();
         public readonly CancellationTokenSource CancellationToken = new CancellationTokenSource();
-        private HttpListener listener;
+        private HttpListener listener = new HttpListener();
         private long stopAfterBytes = -1;
         private long bytesServed = 0;
         public bool NonResumable { get; set; }
@@ -32,8 +32,10 @@ namespace MockServer
 
         public void StartAsync()
         {
-            listener = new HttpListener();
-            listener.Prefixes.Add(BaseUrl);
+            if (listener.Prefixes.Count == 0)
+            {
+                listener.Prefixes.Add(BaseUrl);
+            }
             listener.Start();
 
             Task.Factory.StartNew(Start);
@@ -61,7 +63,7 @@ namespace MockServer
 
         public void Start()
         {
-            
+
             while (!this.CancellationToken.IsCancellationRequested)
             {
                 HttpListenerContext context = listener.GetContext();
