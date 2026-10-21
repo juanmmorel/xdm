@@ -54,7 +54,7 @@ DESC_SITEEXCEPTIONS=No capturar automáticamente descargas de los siguientes sit
 DESC_DEF=Por defecto
 
 
-DESC_SAVE_Q=Salvar
+DESC_SAVE_Q=Guardar
 
 MSG_MAX_DOWNLOAD=Máximas descargas simultáneas
 
